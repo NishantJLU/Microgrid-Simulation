@@ -7,16 +7,63 @@ Designed for control engineers, energy researchers, and web developers, it bring
 
 ---
 
-## 📐 Microgrid Architecture
+## 📐 System Topology & Block Diagram
 
-The system models an averaged/control-oriented microgrid configuration:
+The microgrid system models the energy exchange between solar generation, battery storage, local loads, and the utility grid.
+
+### 1. Power-Flow Schematic
+This flowchart represents the physical power flow routing in the microgrid model:
+
+```mermaid
+graph TD
+    subgraph Generation
+        PV["☀️ PV Array (60kW)"] -->|Solar Power Ppv| DCDC["⚡ DC/DC Boost Converter"]
+    end
+
+    subgraph DC_Link_Bus [Central DC Link Bus]
+        DCDC -->|Ppv| DCLink{"🔋 Central DC Link Capacitor (800V)"}
+        BESS["🔋 Battery Storage (1ESS - 120kWh)"] <-->|Bi-directional Pbatt| DCLink
+    end
+
+    subgraph Load_and_Grid [Distribution]
+        DCLink -->|Pinv| Inverter["⚡ DC/AC Inverter"]
+        Inverter -->|AC Power| AC_Bus["🔌 Local AC Bus"]
+        BaseLoad["🔌 Base Load (45kW)"] --> AC_Bus
+        LoadStep["📈 Load Step (+10kW at t=6s)"] --> AC_Bus
+        AC_Bus <-->|Net Exchange Pgrid| Grid["🌐 Utility Grid"]
+    end
+
+    style DCLink fill:#fdf2e9,stroke:#e67e22,stroke-width:2px;
+    style BESS fill:#e8f8f5,stroke:#1abc9c,stroke-width:2px;
+    style PV fill:#fef9e7,stroke:#f1c40f,stroke-width:2px;
+    style Grid fill:#ebf5fb,stroke:#3498db,stroke-width:2px;
+    style AC_Bus fill:#f4f6f7,stroke:#7f8c8d,stroke-dasharray: 5 5;
 ```
-PV Array (60kW) ──> DC/DC Boost ──> DC LINK CAPACITOR (800V) ──> Inverter ──> Transformer ──> Utility Grid
-                                          ▲
-                                          │ (Bi-directional)
-                                   Battery BESS (120kWh)
-                                          │
-                                     AC Load Demand
+
+---
+
+### 2. Feedback Control Loop (DC Voltage Regulator)
+To regulate the central DC link voltage ($V_{dc}$), a battery charge/discharge feedback controller monitors the bus voltage and controls BESS output. This flowchart represents the Simulink signal feedback path:
+
+```mermaid
+graph LR
+    Vref["Vdc_ref (800V)"] -->|+ Input| Sum["(±) Vdc Error"]
+    Vfeed["Vdc Feedback (z⁻¹)"] -->|- Input| Sum
+    
+    Sum -->|Vdc_Error| Kbat["Proportional Gain (Kbat = 250 W/V)"]
+    Kbat -->|Power Cmd Pcmd| Limit["Battery Limit (±30kW)"]
+    Limit -->|Saturated Pbatt| BESS["Battery Dynamics"]
+    
+    BESS -->|Pbatt Power Output| DC_Cap["Capacitor Integration (Cdc)"]
+    PV_In["Ppv Power"] --> DC_Cap
+    Load_In["Pinv Load"] --> DC_Cap
+    
+    DC_Cap -->|State Equation Vdc| Delay["Unit Delay Block (1ms Delay)"]
+    Delay -->|Delayed Vdc| Vfeed
+
+    style Sum fill:#fdedec,stroke:#e74c3c,stroke-width:2px;
+    style Delay fill:#f4ecf7,stroke:#9b59b6,stroke-dasharray: 3 3;
+    style Limit fill:#f5eef8,stroke:#8e44ad,stroke-width:2px;
 ```
 
 ---
