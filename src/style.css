@@ -150,10 +150,10 @@ h1 {
 /* Layout Grid Container */
 .simugrid-container {
   display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: calc(var(--space-8) * 2);
-  padding: calc(var(--space-8) * 2);
-  max-width: 1680px;
+  grid-template-columns: 320px 1fr;
+  gap: var(--space-8);
+  padding: var(--space-8);
+  max-width: 1600px;
   margin: 0 auto;
   min-height: calc(100vh - 50px);
 }
@@ -161,7 +161,7 @@ h1 {
 .dashboard-center {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--space-8) * 2);
+  gap: var(--space-8);
 }
 
 /* iOS Minimalist Cards */
@@ -169,7 +169,7 @@ h1 {
   background-color: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: calc(var(--space-8) * 1.5);
+  padding: var(--space-8);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
   transition: box-shadow var(--motion-normal) ease, border-color var(--motion-normal) ease;
   display: flex;
@@ -188,7 +188,7 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-secondary);
-  margin-bottom: calc(var(--space-8) * 1.5);
+  margin-bottom: var(--space-8);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -199,7 +199,7 @@ h1 {
 /* Parameters Sidebar Scroller */
 .params-scroller {
   overflow-y: auto;
-  max-height: calc(100vh - 270px);
+  max-height: calc(100vh - 230px);
   padding-right: var(--space-4);
 }
 
@@ -328,7 +328,16 @@ input[type="range"].custom-range::-webkit-slider-thumb:active {
   flex-grow: 1;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1250px) {
+  .simugrid-container {
+    grid-template-columns: 1fr;
+  }
+  .params-scroller {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 1350px) {
   .sim-panels-grid {
     grid-template-columns: 1fr;
   }
@@ -341,7 +350,7 @@ input[type="range"].custom-range::-webkit-slider-thumb:active {
   border-radius: var(--radius-md);
   overflow: hidden;
   height: 100%;
-  min-height: 380px;
+  min-height: 260px;
   position: relative;
 }
 
@@ -427,7 +436,7 @@ input[type="range"].custom-range::-webkit-slider-thumb:active {
 .scope-chart-wrapper {
   position: relative;
   flex-grow: 1;
-  height: 310px;
+  height: 210px;
   width: 100%;
 }
 
