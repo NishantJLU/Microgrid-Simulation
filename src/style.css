@@ -1,0 +1,492 @@
+/* SimuGrid Lab — Apple (India) Design System & Style Foundations */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Apple (India) Semantic & Component Tokens */
+  --bg-darkest: #fafafc;       /* color.surface.raised */
+  --bg-dashboard: #fafafc;     /* color.surface.raised */
+  --bg-card: #ffffff;          /* color.surface.strong */
+  --bg-card-hover: #ffffff;
+  --bg-header: #000000;        /* color.surface.base */
+  
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+
+  --text: #1d1d1f;             /* color.text.secondary */
+  --text-secondary: #6e6e73;   /* Neutral secondary text */
+  --text-muted: #86868b;       /* Muted gray text */
+  --text-inverse: #f5f5f7;     /* color.text.inverse (light text on black) */
+  --text-link: #0066cc;        /* color.text.tertiary (clickable links) */
+  
+  /* Primary Action Accents */
+  --accent: #0071e3;            /* color.surface.muted (Apple Blue action) */
+  --accent-glow: rgba(0, 113, 227, 0.15);
+  --accent-success: #10b981;
+  --accent-danger: #ef4444;
+
+  /* Typography Scale */
+  --font-size-xs: 12px;        /* font.size.xs */
+  --font-size-sm: 14px;        /* font.size.sm */
+  --font-size-md: 17px;        /* font.size.md */
+  --font-size-lg: 21px;        /* font.size.lg */
+  --font-size-xl: 28px;        /* font.size.xl */
+  --font-size-2xl: 34px;       /* font.size.2xl */
+  --font-size-3xl: 40px;       /* font.size.3xl */
+  --font-size-4xl: 56px;       /* font.size.4xl */
+
+  /* Spacing Scale (Exact tokens) */
+  --space-1: 3px;              /* space.1 */
+  --space-2: 4px;              /* space.2 */
+  --space-3: 5px;              /* space.3 */
+  --space-4: 6px;              /* space.4 */
+  --space-5: 8px;              /* space.5 */
+  --space-6: 9px;              /* space.6 */
+  --space-7: 9.6px;            /* space.7 */
+  --space-8: 11px;             /* space.8 */
+
+  /* Radius Tokens */
+  --radius-xs: 50px;           /* radius.xs */
+  --radius-sm: 980px;          /* radius.sm (perfect pill border-radius) */
+  --radius-md: 18px;           /* iOS card standard radius */
+  
+  /* Motion Durations */
+  --motion-instant: 100ms;     /* motion.duration.instant */
+  --motion-fast: 240ms;        /* motion.duration.fast */
+  --motion-normal: 250ms;      /* motion.duration.normal */
+  --motion-slow: 320ms;        /* motion.duration.slow */
+  --motion-slower: 1000ms;     /* motion.duration.slower */
+}
+
+/* Reset and Global elements */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dashboard);
+  color: var(--text);
+  font-family: 'SF Pro Text', 'Myriad Set Pro', 'SF Pro Icons', 'Apple Legacy Chevron', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-size: 12px;            /* font.size.base */
+  font-weight: 400;           /* font.weight.base */
+  line-height: 16.0005px;     /* font.lineHeight.base */
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Accessibility Focus Visible outline indicator */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Stark Black Top Navigation */
+header {
+  background-color: var(--bg-header);
+  padding: var(--space-8) calc(var(--space-8) * 3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.logo-glow {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-inverse);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  transition: transform var(--motion-fast) ease;
+}
+
+.logo-container:hover .logo-glow {
+  transform: scale(1.2);
+}
+
+h1 {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-inverse);
+  letter-spacing: -0.01em;
+}
+
+.model-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1px var(--space-5);
+  border-radius: 3px;
+  border: none;
+}
+
+/* Layout Grid Container */
+.simugrid-container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: calc(var(--space-8) * 2);
+  padding: calc(var(--space-8) * 2);
+  max-width: 1680px;
+  margin: 0 auto;
+  min-height: calc(100vh - 50px);
+}
+
+.dashboard-center {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-8) * 2);
+}
+
+/* iOS Minimalist Cards */
+.glass-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: calc(var(--space-8) * 1.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  transition: box-shadow var(--motion-normal) ease, border-color var(--motion-normal) ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-card:hover {
+  background-color: var(--bg-card);
+  border-color: var(--border-strong);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: calc(var(--space-8) * 1.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-5);
+}
+
+/* Parameters Sidebar Scroller */
+.params-scroller {
+  overflow-y: auto;
+  max-height: calc(100vh - 270px);
+  padding-right: var(--space-4);
+}
+
+.param-row {
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.param-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--space-2);
+}
+
+.param-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  margin-bottom: var(--space-4);
+}
+
+.param-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Range sliders matching iOS HIG design */
+input[type="range"].custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: var(--radius-sm);
+  background: var(--border-strong);
+  outline: none;
+  transition: background var(--motion-fast) ease;
+}
+
+input[type="range"].custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform var(--motion-instant) ease;
+}
+
+input[type="range"].custom-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type="range"].custom-range::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+  background: var(--accent);
+}
+
+/* Solver Controls */
+.solver-control-group {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Apple rounded pill buttons */
+.run-btn {
+  background-color: var(--accent);
+  color: var(--bg-card);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: calc(var(--space-8) * 0.9) calc(var(--space-8) * 1.5);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) ease, transform var(--motion-instant) ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.run-btn:hover {
+  background-color: #0062c3;
+}
+
+.run-btn:active {
+  transform: scale(0.98);
+}
+
+.run-btn:disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Progress bar indicators */
+.progress-bar-container {
+  height: 3px;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: none;
+}
+
+.progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background-color: var(--accent-success);
+  transition: width var(--motion-instant) linear;
+}
+
+/* Center Section components grids */
+.sim-panels-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: calc(var(--space-8) * 2);
+  flex-grow: 1;
+}
+
+@media (max-width: 1200px) {
+  .sim-panels-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Block Diagram Sheet */
+.simulink-sheet {
+  background: #f5f5f7;         /* Apple light grey canvas background */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  height: 100%;
+  min-height: 380px;
+  position: relative;
+}
+
+#simulink-svg {
+  display: block;
+}
+
+.sim-block {
+  cursor: pointer;
+}
+
+.sim-block rect, .sim-block circle, .sim-block polygon {
+  transition: stroke var(--motion-fast) ease, fill var(--motion-fast) ease;
+}
+
+.sim-block:hover rect {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+}
+
+.sim-block.selected rect, .sim-block.selected circle, .sim-block.selected polygon {
+  stroke: var(--accent) !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 2px 10px rgba(0, 113, 227, 0.2)) !important;
+}
+
+.block-title {
+  font-weight: 600;
+  fill: #1d1d1f;
+  font-size: 11px;
+}
+
+.block-subtitle {
+  fill: #86868b;
+  font-size: 9px;
+}
+
+.block-lbl {
+  font-size: 9px;
+  font-weight: 500;
+  fill: var(--text-secondary);
+}
+
+.wire {
+  fill: none;
+  stroke: #86868b;             /* Neutral dark line for light canvas */
+  stroke-width: 1.5px;
+  transition: stroke var(--motion-fast) ease, stroke-width var(--motion-fast) ease;
+}
+
+.sim-block:hover + .wire, .wire:hover {
+  stroke: var(--accent);
+  stroke-width: 2.2px;
+}
+
+/* Details Drawer Block equations panel */
+.block-details-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: calc(var(--space-8) * 1.2);
+  margin-top: auto;
+  font-size: var(--font-size-xs);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.01);
+}
+
+.equation-display {
+  background: #f5f5f7;         /* color.text.inverse (used as light grey code block) */
+  border: 1px solid var(--border);
+  padding: var(--space-8);
+  border-radius: var(--space-5);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-link);     /* Link blue for compiler codes */
+  overflow-x: auto;
+  margin: var(--space-5) 0;
+  font-size: 11px;
+}
+
+/* Scope Oscilloscope panel */
+.chart-card {
+  flex-grow: 1;
+}
+
+.scope-chart-wrapper {
+  position: relative;
+  flex-grow: 1;
+  height: 310px;
+  width: 100%;
+}
+
+.scope-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-8);
+}
+
+.scope-stat-box {
+  background: #fafafc;         /* color.surface.raised */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8) calc(var(--space-8) * 1.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scope-stat-lbl {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.scope-stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Math fraction alignment layout */
+.math-frac {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 0.95em;
+  margin: 0 0.1em;
+}
+.math-frac > span {
+  display: block;
+  padding: 0 0.25em;
+}
+.math-frac span.math-num {
+  border-bottom: 1.5px solid var(--text-link);
+}
+
+/* Clickable download links */
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: color var(--motion-instant) ease;
+}
+
+a:hover {
+  color: #004499;
+  text-decoration: underline;
+}

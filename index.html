@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimuGrid Lab — MATLAB/Simulink R2026a Power-Flow Co-Simulation</title>
+  <meta name="description" content="Simulate the build_microgrid_r2026a Simulink model transients (DC Link voltage regulation, BESS battery controller charging, PV step, load step) directly in your browser.">
+  <link rel="stylesheet" href="/src/style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Premium Header Bar -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-glow"></div>
+      <h1>SimuGrid Lab</h1>
+      <span class="model-tag">MATLAB R2026a Model</span>
+    </div>
+    <div style="display:flex; gap:1rem; align-items:center;">
+      <a href="/build_microgrid_r2026a.m" download class="model-tag" style="color:var(--accent); border-color:var(--accent-glow); text-decoration:none; background:rgba(59,130,246,0.08); font-weight:600;">
+        📥 Download build_microgrid_r2026a.m
+      </a>
+    </div>
+  </header>
+
+  <!-- SimuGrid Grid Layout -->
+  <main class="simugrid-container">
+    
+    <!-- LEFT PANEL: MATHEMATICAL MODEL CONFIGURATOR -->
+    <section class="glass-card" aria-label="Simulink Model Parameters">
+      <div class="card-title">
+        <span>⚙️ MODEL PARAMETERS</span>
+      </div>
+
+      <div class="params-scroller">
+        <!-- Ppv rated -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>PV Rated Capacity (Ppv_rated)</span>
+            <span id="lbl-ppv-rated" class="param-val">60 kW</span>
+          </div>
+          <div class="param-desc">Rated power of the solar array at 1000 W/m² irradiance</div>
+          <input type="range" id="slider-ppv-rated" min="10" max="150" value="60" class="custom-range">
+        </div>
+
+        <!-- Vdc ref -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>DC Voltage Setpoint (Vdc_ref)</span>
+            <span id="lbl-vdc-ref" class="param-val">800 V</span>
+          </div>
+          <div class="param-desc">Reference DC Link voltage target for the regulator</div>
+          <input type="range" id="slider-vdc-ref" min="400" max="1000" step="50" value="800" class="custom-range">
+        </div>
+
+        <!-- Cdc capacitor -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>DC Capacitance (Cdc)</span>
+            <span id="lbl-cdc" class="param-val">0.020 F</span>
+          </div>
+          <div class="param-desc">Capacity of the central DC link capacitor storage unit</div>
+          <input type="range" id="slider-cdc" min="0.002" max="0.100" step="0.002" value="0.020" class="custom-range">
+        </div>
+
+        <!-- Pbat max -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>BESS Max Power (Pbat_max)</span>
+            <span id="lbl-pbat-max" class="param-val">30 kW</span>
+          </div>
+          <div class="param-desc">Maximum charge and discharge power capability of BESS</div>
+          <input type="range" id="slider-pbat-max" min="10" max="100" value="30" class="custom-range">
+        </div>
+
+        <!-- Ebat Wh -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>BESS Capacity (Ebat_Wh)</span>
+            <span id="lbl-ebat-wh" class="param-val">120 kWh</span>
+          </div>
+          <div class="param-desc">Total nominal battery capacity storage rating</div>
+          <input type="range" id="slider-ebat-wh" min="20" max="500" value="120" class="custom-range">
+        </div>
+
+        <!-- SOC0 -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>Initial Charge (SOC0)</span>
+            <span id="lbl-soc0" class="param-val">60%</span>
+          </div>
+          <div class="param-desc">Initial state-of-charge when the solver steps start</div>
+          <input type="range" id="slider-soc0" min="15" max="95" value="60" class="custom-range">
+        </div>
+
+        <!-- Kbat controller gain -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>Controller Gain (Kbat)</span>
+            <span id="lbl-kbat" class="param-val">250 W/V</span>
+          </div>
+          <div class="param-desc">Proportional loop feedback gain regulating DC Link Vdc</div>
+          <input type="range" id="slider-kbat" min="50" max="1000" step="10" value="250" class="custom-range">
+        </div>
+
+        <!-- Irradiance Step Time -->
+        <div class="param-row" style="border-top:1px dashed var(--border); padding-top:0.75rem;">
+          <div class="param-header">
+            <span>Solar Step Time</span>
+            <span id="lbl-solar-step-time" class="param-val">5.0 s</span>
+          </div>
+          <div class="param-desc">Time when solar irradiance steps from 1000 to 700 W/m²</div>
+          <input type="range" id="slider-solar-step-time" min="1" max="9" step="0.5" value="5.0" class="custom-range">
+        </div>
+
+        <!-- Load Step Time -->
+        <div class="param-row">
+          <div class="param-header">
+            <span>Load Step Time</span>
+            <span id="lbl-load-step-time" class="param-val">6.0 s</span>
+          </div>
+          <div class="param-desc">Time when load steps from 45 kW to 55 kW</div>
+          <input type="range" id="slider-load-step-time" min="1" max="9" step="0.5" value="6.0" class="custom-range">
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="solver-control-group">
+        <button id="btn-run-simulation" class="run-btn">
+          ⚡ Run Simulink Simulation (10s)
+        </button>
+        <div class="progress-bar-container" id="solver-progress-container">
+          <div class="progress-bar-fill" id="solver-progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT DASHBOARD COLUMN: VISUALIZER & SCOPE -->
+    <div class="dashboard-center">
+      
+      <!-- Top split: SVG block diagram + Block equations -->
+      <div class="sim-panels-grid">
+        
+        <!-- Interactive Simulink sheet diagram -->
+        <section class="glass-card" aria-label="Simulink Block Diagram Schema">
+          <div class="card-title">
+            <span>📐 Simulink Model Schema (Click Block to Inspect)</span>
+          </div>
+          <div id="diagram-container" style="flex-grow:1;"></div>
+        </section>
+
+        <!-- Block detail equations drawer -->
+        <section class="glass-card" aria-label="Block Equation Details">
+          <div class="card-title">
+            <span>📝 Block Equations & Specifications</span>
+          </div>
+          <div id="details-empty-state" style="margin:auto; text-align:center; color:var(--text-secondary); font-size:0.85rem;">
+            Click a block in the diagram to inspect its mathematical equations and Simulink settings.
+          </div>
+          <div id="details-content-panel" class="block-details-panel" style="display:none;">
+            <h3 id="details-title" style="font-size:0.95rem; font-weight:700; margin-bottom:0.4rem; color:var(--accent);">Block Title</h3>
+            <p id="details-explanation" style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.75rem; line-height:1.4;">Explanation text.</p>
+            <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Math Formula</div>
+            <div id="details-equation" class="equation-display">Equation formula</div>
+            <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-top:0.5rem;">Simulink Script Constructor</div>
+            <div id="details-matlab" class="equation-display" style="color:var(--text-secondary); white-space:pre-wrap; font-size:0.72rem;">Constructor</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Scope Oscilloscope Card -->
+      <section class="glass-card chart-card" aria-label="Simulink Oscilloscope Scope">
+        <div class="card-title">
+          <span>📺 SIMULINK SCOPE TRANSIENTS (Scope)</span>
+          <span style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; color:var(--text-secondary);">t = 0.0s to 10.0s</span>
+        </div>
+
+        <div class="scope-chart-wrapper">
+          <canvas id="chart-simulink-scope"></canvas>
+        </div>
+
+        <!-- Scope Measurements Grid -->
+        <div class="scope-stats-grid">
+          <div class="scope-stat-box">
+            <span class="scope-stat-lbl">DC Link Voltage Ripple (Min / Max)</span>
+            <span id="lbl-vdc-min-max" class="scope-stat-val" style="color:#ef4444;">-- V</span>
+          </div>
+          <div class="scope-stat-box">
+            <span class="scope-stat-lbl">Final Battery State of Charge (SOC)</span>
+            <span id="lbl-soc-final" class="scope-stat-val" style="color:#10b981;">-- %</span>
+          </div>
+          <div class="scope-stat-box">
+            <span class="scope-stat-lbl">Maximum Battery Peak Power</span>
+            <span id="lbl-pbat-peak" class="scope-stat-val" style="color:#a855f7;">-- kW</span>
+          </div>
+          <div class="scope-stat-box">
+            <span class="scope-stat-lbl">Net Grid Energy Exchanged (10s)</span>
+            <span id="lbl-grid-energy-net" class="scope-stat-val" style="color:#3b82f6;">-- kWh</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
